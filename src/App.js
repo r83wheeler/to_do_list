@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import React from 'react';
 import './App.css';
 import Task from './Task'
@@ -8,6 +9,7 @@ library.add(faTrash);
 
 class App extends React.Component {
   constructor(props) {
+    //We call super to inherit any classes, functions, or methods from the parent component we're extending from 
     super(props);
     //define the state
     this.state = {
@@ -57,6 +59,7 @@ class App extends React.Component {
       })
     }
   }
+
   deleteItem(key) {
     //property called filter that filters the items that meets the condition we give
     //will filter all items that key doesn't match and store it in filteredItems
@@ -64,48 +67,64 @@ class App extends React.Component {
       item.key !== key);
     //update state
     this.setState({
-    items: filteredItems
-  })
-}
-//define the function, it recieves the value and key
-setUpdate(text, key){
-  const items = this.state.items;
-  //loop through each item using the map function
-  items.map(item =>{
-    //check if the item key is equal to the key that is provided in the function
-    if(item.key===key){
-      //then change the text to the text value
-      item.text=text;
+      items: filteredItems
+    })
+  }
+  //define the function, it recieves the value and key
+  setUpdate(text, key) {
+    const items = this.state.items;
+    //loop through each item using the map function
+    items.map(item => {
+      //check if the item key is equal to the key that is provided in the function
+      if (item.key === key) {
+        //then change the text to the text value
+        item.text = text;
+      }
+    })
+    //update this state with the new items
+    this.setState({
+      items: items
+    })
+  }
+  componentDidMount() {
+    let items = window.localStorage.getItem('items')
+
+    console.log(items)
+
+    if (items) {
+      console.log("found the todos, ", items)
+      this.setState({
+        items: JSON.parse(items)
+      })
+    } else {
+      console.log('did not find the items, creating new item')
+      window.localStorage.setItem('items', JSON.stringify(this.state.items))
     }
-  })
-  //update this state with the new items
-  this.setState({
-    items: items
-  })
-}
+  }
+  componentDidUpdate() {
+    window.localStorage.setItem('items', JSON.stringify(this.state.items))
+  }
 
-
-
-render(){
-  return (
-    <div className="App">
-      <header>
-        <form id="to-do-form" onSubmit={this.addItem}>
-          <input type="text" placeholder="Enter Task"
-            //link the input field and current item by setting the value of the input field to currentItem.text
-            //variables and methods must be enclosed inside of curly braces because it is part of jsx when including javascript variable or method inside of an html file
-            value={this.state.currentItem.text}
-            //sets the onChange to the handleInput method
-            onChange={this.handleInput} />
-          <button type="submit">Add</button>
-        </form>
-      </header>
-      <Task items={this.state.items}
-        deleteItem={this.deleteItem}
-        setUpdate ={this.setUpdate}></Task>
-    </div>
-  );
-}
+  render() {
+    return (
+      <div className="App">
+        <header>
+          <form id="to-do-form" onSubmit={this.addItem}>
+            <input type="text" placeholder="Enter Task"
+              //link the input field and current item by setting the value of the input field to currentItem.text
+              //variables and methods must be enclosed inside of curly braces because it is part of jsx when including javascript variable or method inside of an html file
+              value={this.state.currentItem.text}
+              //sets the onChange to the handleInput method
+              onChange={this.handleInput} />
+            <button type="submit">Add</button>
+          </form>
+        </header>
+        <Task items={this.state.items}//pass the task items to the task items component 
+          deleteItem={this.deleteItem}
+          setUpdate={this.setUpdate}></Task>
+      </div>
+    );
+  }
 }
 
 export default App;

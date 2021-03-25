@@ -5,7 +5,8 @@ import FlipMove from 'react-flip-move';
 
 function Task(props) {
     //get props.items and store in a new var called items so it is easier to access 
-    const items = props.items;
+    const items = props.items;//these items will be recieved as props 
+    //
     const tasks = items.map(item => {
         return <div className="list" key={item.key}>
             <p>
